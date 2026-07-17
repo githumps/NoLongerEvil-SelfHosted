@@ -108,7 +108,11 @@ def preserve_fan_timer_state(
             result[key] = value
 
     incoming_timeout = new_values.get("fan_timer_timeout")
-    if not isinstance(incoming_timeout, (int, float)) or incoming_timeout <= int(time.time()):
+    try:
+        normalized_timeout = int(incoming_timeout)
+    except (TypeError, ValueError, OverflowError):
+        normalized_timeout = 0
+    if normalized_timeout <= int(time.time()):
         result["fan_timer_timeout"] = current_state.timeout
 
     if existing_values.get("fan_control_state") is True:

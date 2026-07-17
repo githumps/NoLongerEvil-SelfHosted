@@ -93,3 +93,12 @@ class TestPreserveFanTimerState:
         result = preserve_fan_timer_state(existing, new_values)
 
         assert result["fan_timer_timeout"] == new_timeout
+
+    def test_explicit_new_timeout_as_numeric_string(self):
+        """Test that a new numeric-string timeout is used."""
+        existing = {"fan_timer_timeout": int(time.time()) + 3600}
+        new_timeout = str(int(time.time()) + 7200)
+
+        result = preserve_fan_timer_state(existing, {"fan_timer_timeout": new_timeout})
+
+        assert result["fan_timer_timeout"] == new_timeout
